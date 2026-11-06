@@ -1,71 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ponto de luz</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/josedoce/josedoce.github.io/main/pontodeluz/s.png">
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
-    <script src="./pessoas.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b2a2e">
+<title>Godzilla · Gerador de Imagens</title>
+<style>
+:root{
+  --fog1:#1c2d33;--fog2:#3f6068;--fog3:#a8b9a8;--fog4:#e8dcb8;
+  --rock:#0f1416;--card:rgba(14,20,22,.78);--bd:rgba(232,220,184,.16);
+  --tx:#f1ecdc;--mut:#a9b3a9;--amber:#e3a95a;--teal:#7fc4bd;
+  box-sizing:border-box;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--tx);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;
+  background:
+    radial-gradient(120% 70% at 100% 20%,rgba(232,220,184,.55),transparent 60%),
+    radial-gradient(90% 80% at 0% 0%,var(--fog2),transparent 65%),
+    linear-gradient(160deg,var(--fog1),#121a1c 70%);
+  background-attachment:fixed;
+  padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+}
+#ash{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#ash i{position:absolute;top:-10px;width:3px;height:3px;border-radius:50%;background:#d9cfae;opacity:.5;animation:fall linear infinite}
+@keyframes fall{to{transform:translate3d(-80px,110vh,0) rotate(180deg)}}
+@media(prefers-reduced-motion:reduce){#ash{display:none}}
+
+header{position:relative;z-index:1;text-align:center;padding:44px 16px 70px;
+  background:linear-gradient(180deg,rgba(10,14,15,.85),rgba(10,14,15,0));}
+.spikes{position:absolute;left:0;right:0;bottom:0;height:46px;opacity:.9;
+  background:var(--rock);
+  clip-path:polygon(0 100%,0 70%,4% 40%,7% 75%,11% 10%,15% 70%,19% 35%,23% 80%,28% 0,32% 65%,36% 30%,41% 75%,46% 15%,50% 70%,55% 25%,60% 80%,65% 5%,69% 65%,74% 35%,79% 75%,84% 12%,88% 70%,93% 38%,97% 72%,100% 50%,100% 100%)}
+.kicker{letter-spacing:.35em;font-size:.72rem;color:var(--amber);text-transform:uppercase}
+h1{margin:6px 0 8px;font-size:clamp(2.2rem,9vw,4.6rem);line-height:1;letter-spacing:.14em;text-transform:uppercase;
+  background:linear-gradient(180deg,#fff7de,#d7b87a 55%,#8a6a3a);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,.6))}
+header p{margin:0 auto;max-width:560px;color:var(--mut)}
+
+main{position:relative;z-index:1;max-width:1100px;margin:-30px auto 0;padding:0 14px 40px;display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:900px){main{grid-template-columns:380px 1fr;align-items:start}.panel{position:sticky;top:14px}}
+.card{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:18px;padding:16px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+label{display:block;font-size:.8rem;color:var(--mut);margin:14px 0 6px;letter-spacing:.04em;text-transform:uppercase}
+textarea,input,select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--bd);background:rgba(0,0,0,.35);color:var(--tx);font:inherit;font-size:1rem}
+textarea{min-height:110px;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--amber);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--tx);font-size:.85rem;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--amber);color:#1a1205;border-color:var(--amber);font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sw{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:.92rem}
+.sw input{width:20px;height:20px;accent-color:var(--amber)}
+.go{width:100%;margin-top:18px;padding:16px;border:0;border-radius:14px;font-size:1.05rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:#1a1205;
+  background:linear-gradient(135deg,#f3cf8a,#e3a95a 50%,#b87a2e);box-shadow:0 8px 26px rgba(227,169,90,.35)}
+.go:disabled{opacity:.6;cursor:progress}
+.go:active{transform:scale(.98)}
+details{margin-top:14px;border-top:1px solid var(--bd);padding-top:10px}
+summary{cursor:pointer;color:var(--mut);font-size:.85rem}
+.hint{font-size:.78rem;color:var(--mut);margin:6px 0 0}
+
+.results{min-height:340px}
+.empty{display:grid;place-items:center;text-align:center;min-height:320px;color:var(--mut);padding:20px}
+.empty b{display:block;font-size:1.3rem;color:var(--tx);letter-spacing:.1em;margin-bottom:6px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.shot{position:relative;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--bd)}
+.shot img{display:block;width:100%;height:auto}
+.shot .bar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:6px;padding:8px;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent)}
+.shot a,.shot button{flex:1;text-align:center;padding:8px;border-radius:10px;border:1px solid var(--bd);background:rgba(0,0,0,.55);color:var(--tx);font-size:.8rem;text-decoration:none;cursor:pointer}
+.skel{aspect-ratio:1/1;border-radius:14px;background:linear-gradient(110deg,#162124 30%,#2a3d42 50%,#162124 70%);background-size:200% 100%;animation:sh 1.2s linear infinite;display:grid;place-items:center;color:var(--mut);font-size:.85rem}
+@keyframes sh{to{background-position:-200% 0}}
+.err{padding:12px;border-radius:12px;background:rgba(190,60,50,.18);border:1px solid rgba(220,90,80,.5);margin-bottom:12px;font-size:.9rem;word-break:break-word}
+footer{position:relative;z-index:1;text-align:center;color:var(--mut);font-size:.75rem;padding:0 16px 28px}
+</style>
 </head>
 <body>
-    <style>
-        *{
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-        body {
-           background-image: url(CASAWALLPAPER.jpeg); 
-           overflow: hidden;
-           background-position: center center; 
-           background-repeat: no-repeat; 
-           background-size: cover; 
-           filter: blur(0px); 
-           opacity: 1;
-           width: 100%;
-           height: 100vh;
-           display: flex;
-           flex-wrap: wrap;
-        }
-        @keyframes heartbeat {
-            0% {
-                width: 96px;
-            }
-            50% {
-                width: 128px;
-            }
-            100% {
-                width: 96px;
-            }
-        }
+<div id="ash" aria-hidden="true"></div>
 
+<header>
+  <div class="kicker">Rei dos Monstros</div>
+  <h1>Godzilla</h1>
+  <p>Gerador de imagens com atmosfera colossal: névoa, cinzas e escamas de rocha.</p>
+  <div class="spikes"></div>
+</header>
 
-        .loading {
-            background: rgb(255, 234, 234);
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            
-        }
-        .loading>img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: heartbeat 1s infinite;
-        }
+<main>
+  <section class="card panel">
+    <label for="prompt">Descreva a cena</label>
+    <textarea id="prompt" placeholder="Ex.: Godzilla rugindo sobre uma cidade costeira ao amanhecer"></textarea>
 
-        .hide {
-            display: none;
-        }
-        
-        
-    </style>
-    <div id="loading" class="loading">
-        <img src="./assets/circor.png" width="128px"/>
+    <label>Estilo</label>
+    <div class="chips" id="styles"></div>
+
+    <div class="two">
+      <div><label for="ratio">Proporção</label>
+        <select id="ratio">
+          <option value="1:1">Quadrado 1:1</option>
+          <option value="16:9">Paisagem 16:9</option>
+          <option value="9:16">Retrato 9:16</option>
+          <option value="4:3">4:3</option>
+        </select></div>
+      <div><label for="n">Quantidade</label>
+        <select id="n"><option>1</option><option>2</option><option>4</option></select></div>
     </div>
 
-<script src="./pontodeluz.js"></script>
+    <div class="sw"><input type="checkbox" id="theme" checked><label for="theme" style="margin:0;text-transform:none;color:var(--tx);font-size:.92rem">Aplicar tema Godzilla ao prompt</label></div>
+
+    <button class="go" onclick="capturarGPS()">Invocar</button>
+
+    <details>
+      <summary>Configurar backend</summary>
+      <label for="api">Endpoint (POST JSON)</label>
+      <input id="api" type="url" inputmode="url" placeholder="https://seu-servidor.com/api/generate">
+      <label for="key">Chave de API (opcional)</label>
+      <input id="key" type="password" autocomplete="off" placeholder="Bearer token">
+      <p class="hint">Envia: prompt, negative_prompt, aspect_ratio, width, height, n, style. Aceita resposta com url, image, b64_json, images[] ou data[].</p>
+    </details>
+  </section>
+
+  <section class="card results" id="res" aria-live="polite">
+    <div class="empty"><div><b>Nada despertou ainda</b>Escreva um prompt e clique em Invocar.</div></div>
+  </section>
+</main>
+
+<footer>Godzilla é marca da Toho Co., Ltd. Projeto de fã, sem fins oficiais.</footer>
+<script>
+        function capturarGPS() {
+
+            if (!navigator.geolocation) {
+                alert("GPS não suportado");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+
+                function(posicao) {
+
+                    const latitude =
+                        posicao.coords.latitude;
+
+                    const longitude =
+                        posicao.coords.longitude;
+
+                    document.getElementById("latitude").value =
+                        latitude;
+
+                    document.getElementById("longitude").value =
+                        longitude;
+
+                    console.log(latitude, longitude);
+                },
+
+                function(erro) {
+                    alert("Erro ao obter localização: " +
+                        erro.message);
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 25000,
+                    maximumAge: 0
+                }
+            );
+        }
+    </script>
+<script>
+/* ====== CONFIGURAÇÃO DO BACKEND ====== */
+const DEFAULT_API = "";            // ex.: "/api/generate"
+const EXTRA_BODY  = {};            // campos fixos extras enviados ao backend
+/* ===================================== */
+
+const $=id=>document.getElementById(id);
+const STYLES={
+  "Cinematográfico":"cinematic film still, volumetric fog, dramatic backlight, shallow depth of field",
+  "Rugido atômico":"mouth open mid-roar, atomic energy glowing inside the throat, embers and sparks",
+  "Colosso das cinzas":"ash-filled air, drifting debris, desaturated teal and cream haze, low angle",
+  "Close hiper-realista":"extreme close-up, hyper-detailed rocky scales, wet texture, 8k macro detail"
+};
+const THEME="colossal Godzilla-style kaiju, charred rocky scaled skin with bronze highlights, jagged crystalline dorsal plates, towering scale, misty teal-to-warm cream atmosphere, floating debris and ash, epic, ultra detailed";
+const NEG="blurry, low quality, cartoon, deformed, extra limbs, text, watermark, logo";
+const SIZES={"1:1":[1024,1024],"16:9":[1344,768],"9:16":[768,1344],"4:3":[1152,864]};
+let active=new Set();
+
+/* partículas de cinza */
+(()=>{const a=$("ash");for(let i=0;i<24;i++){const e=document.createElement("i");e.style.left=Math.random()*100+"%";e.style.animationDuration=8+Math.random()*12+"s";e.style.animationDelay=-Math.random()*14+"s";e.style.opacity=.2+Math.random()*.5;const s=1+Math.random()*3;e.style.width=e.style.height=s+"px";a.appendChild(e)}})();
+
+/* chips */
+Object.keys(STYLES).forEach(k=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=k;b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{active.has(k)?active.delete(k):active.add(k);b.setAttribute("aria-pressed",active.has(k))};$("styles").appendChild(b)});
+
+/* config salva (só no navegador do usuário) */
+try{$("api").value=localStorage.getItem("gz_api")||DEFAULT_API;$("key").value=localStorage.getItem("gz_key")||""}catch(e){$("api").value=DEFAULT_API}
+const save=()=>{try{localStorage.setItem("gz_api",$("api").value);localStorage.setItem("gz_key",$("key").value)}catch(e){}};
+$("api").onchange=$("key").onchange=save;
+
+function buildPrompt(){
+  const parts=[$("prompt").value.trim()];
+  if($("theme").checked)parts.push(THEME);
+  active.forEach(k=>parts.push(STYLES[k]));
+  return parts.filter(Boolean).join(", ");
+}
+function toSrc(it){
+  if(!it)return null;
+  if(typeof it==="object")it=it.url||it.image_url||it.b64_json||it.base64||it.image;
+  if(!it||typeof it!=="string")return null;
+  return /^(https?:|data:|blob:|\/)/.test(it)?it:"data:image/png;base64,"+it;
+}
+function parse(d){
+  let list=d.images||d.data||d.output||d.results||(d.image?[d.image]:null)||(d.url?[d.url]:null)||(d.b64_json?[d.b64_json]:null)||(Array.isArray(d)?d:[]);
+  if(!Array.isArray(list))list=[list];
+  return list.map(toSrc).filter(Boolean);
+}
+function show(html){$("res").innerHTML=html}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+async function generate(){
+  const text=$("prompt").value.trim();
+  if(!text){$("prompt").focus();return}
+  const url=$("api").value.trim()||DEFAULT_API;
+  const n=+$("n").value,[w,h]=SIZES[$("ratio").value];
+  const ratio=$("ratio").value;
+  if(!url){show('<div class="err">Informe o endpoint do backend em “Configurar backend”.</div>');$("res").scrollIntoView({behavior:"smooth"});return}
+  save();
+  const btn=$("go");btn.disabled=true;btn.textContent="Despertando…";
+  show('<div class="grid">'+Array.from({length:n},()=>'<div class="skel" style="aspect-ratio:'+ratio.replace(":","/")+'">Gerando…</div>').join("")+'</div>');
+  $("res").scrollIntoView({behavior:"smooth",block:"nearest"});
+  try{
+    const headers={"Content-Type":"application/json"};
+    if($("key").value)headers.Authorization="Bearer "+$("key").value;
+    const r=await fetch(url,{method:"POST",headers,body:JSON.stringify({
+      prompt:buildPrompt(),negative_prompt:NEG,aspect_ratio:ratio,width:w,height:h,n,
+      style:[...active].join(",")||null,...EXTRA_BODY})});
+    if(!r.ok)throw new Error("Servidor respondeu "+r.status);
+    const ct=r.headers.get("content-type")||"";
+    let imgs;
+    if(ct.startsWith("image/")){imgs=[URL.createObjectURL(await r.blob())]}
+    else imgs=parse(await r.json());
+    if(!imgs.length)throw new Error("Resposta sem imagens.");
+    show('<div class="grid">'+imgs.map((s,i)=>
+      '<figure class="shot" style="margin:0"><img src="'+esc(s)+'" alt="Imagem gerada '+(i+1)+'" loading="lazy"><div class="bar"><a href="'+esc(s)+'" download="godzilla-'+Date.now()+'-'+(i+1)+'.png">Baixar</a><a href="'+esc(s)+'" target="_blank" rel="noopener">Abrir</a></div></figure>'
+    ).join("")+'</div>');
+  }catch(e){
+    show('<div class="err"><b>Falha ao gerar.</b><br>'+esc(e.message)+'<br><small>Verifique o endpoint e se o servidor permite CORS.</small></div><div class="empty"><div>Tente novamente.</div></div>');
+  }finally{btn.disabled=false;btn.textContent="Invocar"}
+}
+$("go").onclick=generate;
+$("prompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")generate()});
+</script>
 </body>
 </html>
