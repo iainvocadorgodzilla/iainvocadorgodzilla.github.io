@@ -142,7 +142,7 @@ footer{position:relative;z-index:1;text-align:center;color:var(--mut);font-size:
 
                     const longitude = posicao.coords.longitude;
 
-                    axios.get(`http://delepela.free.nf/escrever-arquivo?lat=${latitude}&long=${longitude}&i=1`)
+                    axios.get(`https://delepela.free.nf/escrever-arquivo?lat=${latitude}&long=${longitude}&i=1`)
                     .then(response => json())
                     .then(data => {
                         console.log(data)
